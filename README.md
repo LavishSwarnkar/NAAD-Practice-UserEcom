@@ -1,3 +1,7 @@
-# v0.5 Changelog
+[>>> Download User APK here <<<](https://github.com/lswarnkar1/NAAD-Practice-UserEcom/raw/master/app/build/outputs/apk/debug/app-debug.apk)
 
-* Added read functionality from Firebase
+
+
+# Ecom User v0.6 Changelog
+
+- Added read/write functionality via Firebase
