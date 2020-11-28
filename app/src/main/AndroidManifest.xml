@@ -10,10 +10,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.lavish.android.userecom.LinearLayoutDemoActivity">
 
-        </activity>
-        <activity android:name=".CatalogActivity">
+        <service
+            android:name=".services.MyFCMService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:exported="false"
+            android:name="com.lavish.android.userecom.LinearLayoutDemoActivity"/>
+
+        <activity android:name=".CatalogActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
