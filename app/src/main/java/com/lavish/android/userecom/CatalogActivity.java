@@ -1,27 +1,25 @@
 package com.lavish.android.userecom;
 
+import android.app.AlertDialog;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.lavish.android.userecom.adapters.ProductsAdapter;
 import com.lavish.android.userecom.databinding.ActivityCatalogBinding;
 import com.lavish.android.userecom.models.Cart;
 import com.lavish.android.userecom.models.Inventory;
 import com.lavish.android.userecom.models.Product;
-import com.lavish.android.userecom.models.Variant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CatalogActivity extends AppCompatActivity {
@@ -41,6 +39,18 @@ public class CatalogActivity extends AppCompatActivity {
         app = (MyApp) getApplicationContext();
         loadData();
         setupCheckout();
+
+        FirebaseMessaging.getInstance()
+                .subscribeToTopic("users");
+
+        sendNotif();
+    }
+
+    private void sendNotif() {
+        /*String response = FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com")
+                .setMessageId("abc")
+                .addData("key", "value")
+                .build());*/
     }
 
     private void loadData() {
