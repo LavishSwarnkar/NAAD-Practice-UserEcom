@@ -15,12 +15,21 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.lavish.android.userecom.adapters.ProductsAdapter;
 import com.lavish.android.userecom.databinding.ActivityCatalogBinding;
+import com.lavish.android.userecom.fcmsender.FCMSender;
+import com.lavish.android.userecom.fcmsender.MessageFormatter;
 import com.lavish.android.userecom.models.Cart;
 import com.lavish.android.userecom.models.Inventory;
 import com.lavish.android.userecom.models.Product;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class CatalogActivity extends AppCompatActivity {
 
@@ -43,14 +52,80 @@ public class CatalogActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance()
                 .subscribeToTopic("users");
 
-        sendNotif();
+        sendNotification();
     }
 
-    private void sendNotif() {
-        /*String response = FirebaseMessaging.getInstance().send(new RemoteMessage.Builder(SENDER_ID + "@gcm.googleapis.com")
-                .setMessageId("abc")
-                .addData("key", "value")
-                .build());*/
+    private void sendNotification(){
+        String message = MessageFormatter
+                .getSampleMessage("users", "Test2", "Tes2");
+
+        new FCMSender()
+                .send(message
+                        , new Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull final IOException e) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(CatalogActivity.this)
+                                                .setTitle("Failure")
+                                                .setMessage(e.toString())
+                                                .show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new AlertDialog.Builder(CatalogActivity.this)
+                                                .setTitle("Success")
+                                                .setMessage(response.toString())
+                                                .show();
+                                    }
+                                });
+
+
+                            }
+                        });
+
+        /*String msg = MessageFormatter.getSampleMessage(
+                "users"
+                , "Hi"
+                , "What's up?");
+
+        Payload payload = new Payload(msg, new OnMsgSentListener() {
+            @Override
+            public void onSuccess(final String response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AlertDialog.Builder(CatalogActivity.this)
+                                .setTitle("Success")
+                                .setMessage(response)
+                                .show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(final String error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new AlertDialog.Builder(CatalogActivity.this)
+                                .setTitle("Error")
+                                .setMessage(error)
+                                .show();
+                    }
+                });
+            }
+        });
+
+        new FCMSender()
+                .send(payload);*/
     }
 
     private void loadData() {
